@@ -1,0 +1,267 @@
+This file describes challenges when working with TA: Kingdoms, the sequel to TA.
+
+=========================
+
+    BASIC PROBLEMS
+
+=========================
+
+
+-------------------------
+My changes/units wont work :
+-------------------------
+
+
+use "-disablecavedogverification" as a command line argument
+
+
+=========================
+
+   ADVANCED PROBLEMS
+
+=========================
+
+-------------------------
+FILE FORMAT:
+-------------------------
+
+
+GAF :
+-------------------------
+
+If you're converting TA arts to TA:K, know this : The file format 
+for TA gaf files is exactly the same as TA:K gaf file. The only 
+difference is the palette. TA:K store the palette in a separate 
+file. Usualy for interface elements, the palette is stored in 
+a .pcx file that has the same name as the gaf. For features and such,
+it's usualy a side specific palette, ie : Aramon, Taros, Veruna and Zhon.
+
+Now, this means that you can use any TA gafs in TA:K providing you 
+make a .pcx that contain TA palette in it with the same name as 
+the gaf. To create one, just make a new image in a generic photo 
+editing software, load a color palette for your new picture using 
+the TA palette. You can get it easily if you have gafbuilder installed. 
+There's usualy three, DO NOT pick the one for Psp, in some cases, 
+it caused crashes for me and it's slightly different than the other 
+two. Oh and the image has to be 1x1 pixel in size. Save it in 256 
+colors as a .pcx and you're in business.
+
+
+DIRECTORIES :
+-------------------------
+
+You can still create directories like /guis, /objects3d etc but 
+there's some slight problems with them. 
+
+1-Sometime, a file you place in one of these directories will 
+flat out crash TA:K but when packed in an archive, it'll work fine.
+
+2-Changes that work and doesnt cause any crash when placed 
+in a directory in unpacked format, will crash TA:K when packed.
+
+
+GUI :
+-------------------------
+
+Read the gui file format description ^_^.
+
+=========================
+
+       TOOL BUGS
+
+=========================
+
+(Boy, did I spend a long time discovering some were bugs and 
+not errors on my part ^_^)
+
+
+
+
+HPIpack :
+-------------------------
+
+When using HPIpack.exe you have to know that for each repacking, 
+you have to restart the program or your changes might not 
+be added. No idea why.
+
+
+
+GafBuilder Pro 2.5 and less :
+-------------------------
+The first bug I noticed is that some files will have frames 
+randomly deleted from a sequence when you save them. 
+
+Take cursors .gaf for example open it and then save it 
+without any changes. You'll notice that CursorDefend and 
+Cursorrevive got some of their frames deleted. C_A_P told me 
+he'd look into it but he was nice enough to write a text 
+file explaning how to get around the problem while he fixes it :
+
+--------------------------------------------------------
+By C_A_P :
+--------------------------------------------------------
+How to work around the bug in Gafbuilder Pro that does'nt 
+save off all the frames for each of the sequences properly...
+
+
+
+Step 1
+1 - Identify the sequences which had corrupt frame/subframe information
+2- open ORIGINAL gaf file that shows all the correct frames 
+3- select one of sequences that becomes corrupt when saved
+4- press the 'record frame positions' button (this will quickly tally the x,y positions for each frame/subframe)
+5- when the screen appears showing the x,y positions, press the 'save' buttton and save 
+
+Step 2
+6- right click on sequence and choose 'export sequence' 
+7- select a folder to export all the frames to 
+
+Step 3
+Repeat above steps for each gaf sequence that appears to get corrupted when saved
+
+Step 4 
+Save gaf
+
+Step 5 
+1- Open up the 'corrupted' gaf...
+2- Delete the sequences which have become corrupt
+3- create each of the sequences again using the 'Create new Sequence' option from the menu. This will create a 'blank' sequence with no images
+4- right click on one of the blank sequences and choose "Auto-import entire sequence' 
+5 - browse to folder which contains the exported images from step 6 above
+6 - program will automatically import all frames/subframes
+7 - press 'record frame position' button again...
+8 - press the 'load' button and choose the .dat file which you saved off in step 4 above
+9 - once the data is loaded, press the 'play' button to play the correct x,y offsets back ito the gaf. 
+
+Voilla!! youre done :)
+--------------------------------------------------------
+
+
+The second problem I encountered, is with compressed sequences. 
+Sometime when you compress a sequence, TA:K will crash. 
+To fix the problem, dont compress them in the first place 
+or uncompress them. I cant tell if this one is caused by 
+GafBuilder or TA:K but I suspect that GafBuilder Pro is 
+to blame since CD original gaf files contain compressed 
+sequences that arent crashing TA:K but when compressed 
+with GafBuilder crash it.
+
+
+The third problem is with sequences with over 100 frames. 
+If you export the sequence and then try to auto import it,
+ most frames will be in the wrong place. This is because 
+directory display the files in alphabetical order that make give this :
+
+01
+02
+03
+04
+05
+06
+07
+08
+09
+10
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+11
+110
+etc..
+
+You get the picture? To get around this bug, dont auto import, 
+instead import via the "Import Sequence" option in "Images". 
+Chose the frames in the right order instead of all selecting 
+them and I pray for you, that you dont have subframes! 
+I had this problem when I was converting TA fonts to TA:K 
+and I hadnt realised that TA gaf were the same except the 
+palette doh!. I thought there was some minors differences.
+
+
+
+Scriptor :
+-------------------------
+
+Many units when descripted and recompiled refused to have any 
+moving animations, like legs movings, paddles moving etc etc.
+
+Example :
+
+
+MoveWatcher()
+{
+	set-signal-mask SIG_MOVE;
+	while( TRUE )
+	{
+		moving = get CURRENT_SPEED > 5 OR direction;
+		sleep 100;
+	}
+}
+
+The problem would happen when compiling, Scriptor would compile it
+into this (result of descripting the new .bos) :
+
+MoveWatcher()
+{
+	set-signal-mask SIG_MOVE;
+	while( TRUE )
+	{
+		moving = get 29 > 5 OR direction;
+		sleep 100;
+	}
+}
+
+Notice that CURRENT_SPEED has been changed to 29. Obviously
+29 is always higher than 5 and so the unit never walks ^_^.
+Until a while ago, the only solution was to hex edit the unit,
+something very little people know how to do and is tedious.
+
+KhalvKalash was nice enough to explain me a work around, here's
+the explanation :
+
+
+--------------------------------------------------------
+By KhalvKalash :
+--------------------------------------------------------
+
+I checked out the problem for a while and I think I have fairly well diagnosed.
+The get function retrieves the first expression after the command ie
+
+	get <expression>
+
+The problem is that Descriptor will decompile an expression like the one you
+found and print
+
+	moving = get CURRENT_SPEED > 5 OR direction;
+
+Scriptor will see this and assume
+
+	moving = get (CURRENT_SPEED > 5 OR direction);
+
+This is not the intended result. A quick fix would be to issolate the get
+expression in a () pair, ie
+
+	moving = (get CURRENT_SPEED) > 5 OR direction;
+
+Scriptor will compile this correctly as intended. Unfortunately that would mean
+you would have to put () in manually for EVERY Descripted script.
+
+	I'll fiddle around with Descriptor to see if I can get it to produce the ()
+pair on its own. At worst, I could just make it put parentheses around every
+get. It would be ugly, but it would work.
+
+Good luck.
+KhalvKalash
+--------------------------------------------------------
+
+
+
+
+

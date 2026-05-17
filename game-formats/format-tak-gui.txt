@@ -1,0 +1,736 @@
+
+
+===================================
+                               
+       TA:K GUI format v1.0      
+                               
+          by Dark Rain           
+                               
+===================================
+
+
+The TA:K gui format isnt much more complicated than the
+TA gui, that is once you understand what means what ^_^.
+
+There's many sections, the first one deals with the basic of
+the format so that you can understand what you're seeing. The rest
+gives details on each widgets available to you and how they work.
+
+Note : This document is made to be viewed with Wordwrap OFF.
+
+
+===================================
+
+        The File Format
+
+===================================
+
+
+STRINGS : 
+-----------------------------------
+
+First thing first, I'll deal with strings. They're the most
+confusing thing it this file format when you dont know how
+they work. Here's an example : 
+
+1 12 aramonig.gaf 6 EndCap 1 9 
+1 14 MainScreen.gaf 14 StandardButton 0 9 
+
+It's easy to guess that the text represent a gaf file and a correpsonding
+animation inside it but what are the numbers? They're never constant for each
+widget, they keep changing etc.
+
+Well it's quite simple, they represent the number of characters in the string.
+One thing to know, is that each number + a string represent ONE and only ONE
+parameter/attribute in a widget. So if it was null we'd have something like that :
+
+1 0 0 0 9   <- Correct
+
+1 0 0 0 0 9 <- Incorrect
+
+
+
+
+STRINGS and BUTTONS/LABELS :
+-----------------------------------
+
+Example :
+
+4 1 
+1 
+2 196 79 95 20 1 0 0 0 
+3 0 0 0 0 
+1 0 0 
+1 14 hattfont11.gaf 
+10 PlayerSide 1 3 
+3 
+1 0 0 0 0 
+1 0 0 0 0 
+1 0 0 0 0 
+3 
+2 0 0 2 0 4 Side 2 0 4 Side 3   <<<<< Discussed line
+1 0 
+1 0 
+1 0 
+2 0 20 Click to select side 
+0 
+
+
+All the widgets out there have a similar line, it's
+for a text caption that appears over it. Here's a general run
+down of their sturcture :
+
+
+Buttons : 
+2 0 0 2 0 6 Player 2 3 6 Play2r 3 
+2 0 0 2 [ALIGNEMENT] [STRING LENGTH] [STRING DOWN] [ALIGNEMENT] [STRING LENGTH] [STRING UP] 
+
+Labels : 
+2 0 5 INTRO 2 0 5 INTRO 2 
+2 [ALIGNEMENT] [STRING LENGTH] [STRING] [ALIGNEMENT] [STRING LENGTH] [STRING]
+
+Alignements : 
+0 = Centered
+1 = Left Aligned
+2 = Right Aligned
+
+It's almost as powerful as Word!
+
+
+
+
+GENERAL STRUCTURE OF A WIDGET :
+-----------------------------------
+
+[WIDGET TYPE] 1 					<-A
+1 							<-B
+2 [X] [Y] [WIDTH] [HEIGHT] 1 0 0 0  			<-C
+3 255 48 48 48 						<-D
+1 0 0 							<-E
+1 [FONT NAME]						<-F
+[CONTROL NAME] 2 3 					<-G
+3 							<-H
+1 [GAF FILENAME] [SEQUENCE NAME] [FRAME NUMBER] 9	<-I
+1 [GAF FILENAME] [SEQUENCE NAME] [FRAME NUMBER] 9 	<-J
+1 [GAF FILENAME] [SEQUENCE NAME] [FRAME NUMBER] 9 	<-K
+3 							<-L
+2 0 0 2 [ALIGNEMENT] [STRING LENGTH] [STRING DOWN] [ALIGNEMENT] [STRING LENGTH] [STRING UP] 	<-M
+1 7 Default						<-N
+1 [SOUUND.WAV]						<-O
+1 7 Default 						<-P
+2 0 [HELP CAPTION] 					<-Q
+[SUB CONTROLS #]					<-R
+
+ 
+What is described below, is valid in ALL the widget UNLESS it's
+specified otherwise.
+
+
+A->This is the type of the widget and the 1 is always 1 !
+   There's many, many types, 2, 4, 17 etc.
+
+B->This is always one except for gui headers.
+
+C->The first 2 parameters, are the x,y positions of the button
+   The next 2 are the widht and height
+   The last four.. beat me ^_^.
+
+D->I tried changing name but no results. Might be editor stuff.
+
+E->Seem to always be 1 0 0
+
+F->This is the font used by the text of this object. Just type the name of
+   font, ie : 25 times new roman (100).gaf
+
+G->The first parameter is the name of the control. The second 2 parameters,
+   are always the same it seems. ie : 4 Play 2 3
+
+H->This is the number of gaf pictures the control use, they are explained below.
+
+I, J, K-> Each one represent a frame of animation in a gaf file, NOT
+          a whole sequence. The last parameter is always 9 and the first is
+          always 1, dont ask ^_^.
+
+          Usualy controls start with the last frame on the first line and 
+          the first frame, ie for a button up, on the last line.
+
+L->The number of string displayed for each stage of the widget.
+
+M->This line is where the strings for each stage of the widget are stored.
+   The first line seems to always be two null parameters. ie : 0 0.
+   For the rest, the order of what is what varies for each widget.
+
+N, P->Beats me
+
+O->Sound played when the widget is activated
+
+Q->This is the text displayed when your cursor goes over a control.
+
+R->This is the number of controls that are "inside" this one. For
+   most the value is 0 because obviously it wouldnt make sense for
+   a button to contain a listbox. There are some controls described
+   bellow that use it tho.
+
+
+
+
+
+===================================
+ INDIVIDUAL 
+            CONTROLS
+                     DESCRIPTION
+
+            ...
+
+ Yes, I'm bored ^_^;
+===================================
+
+
+-----------------------------------
+The gui header (widget #2) : 
+-----------------------------------
+
+Type 1:
+--------
+
+2 1 
+2 0 0 640 480 1 1 0 0 
+3 255 255 255 255 
+1 0 0 
+1 0 
+8 MainMenu 1 2 
+2 
+1 15 TitleScreen.tsf 7 JPGTest 0 9 	  <-A
+1 15 TitleScreen.tsf 7 JPGTest 1 9 	  <-A
+2 
+2 0 0 2 0 0 2 
+1 0 
+1 0 
+2 0 24 #Enter#Play#Esc#Previous    	  <-B
+6 					  <-C
+
+Type 2:
+--------
+
+2 1 
+2 188 98 263 283 1 1 0 0 
+3 255 255 255 255 
+1 0 0 
+1 0 
+6 Panel2 1 2 
+2 
+1 16 HostDialogue.gaf 12 HostDialogue 0 9 <-A
+1 16 HostDialogue.gaf 12 HostDialogue 1 9 <-A
+2 
+2 0 0 2 0 0 2 
+1 0 
+1 0 
+2 0 20 #Enter#Ok#Esc#Cancel 		  <-B
+11 					  <-C
+
+
+This widget, is the header of each GUI file. It contains general infos
+about the menu, like the background image, hot keys etc etc.
+
+There's 2 types of header, one that use .tsf files to display the
+background, which just really means that it uses a jgp. Cool feature, it's
+worth mentionning that the .tsf is supposedly an uncompiled TAF file. Quite
+useful I recon in case someone wants to reverse engineer the TAF format. I'd do
+it but I dont have the knowledge. I tried to find infos on reverse engineering
+of binary files but no dice.
+
+A->This it the background image used by the menu, it can either use a .tsf
+   or .gaf file. Works like explained in the widget intro, for syntax, just put
+   2 time the same images, TA:K needs it for some reasons. Of course, the one that
+   really shows is the second one.
+
+
+
+
+B->This binds some keyboard keys to a control, here's the syntax :
+
+   2 0 [STRING LENGTH] #[KeyName]#[ControlName]#[KeyName]#[ControlName] etc etc
+
+   Known KeyName :
+   ---------------------
+   Enter
+   Esc
+
+
+C->This is the number of items in this form. It's extremely
+   important that you give it the right number unlike OTA
+   GUI files.
+
+Note : A file can contain other headers winthin the same file. Like a sub gui in it.
+
+
+
+
+-----------------------------------
+Button (widget #4) : 
+-----------------------------------
+
+4 1 
+1 
+2 40 192 149 188 1 0 0 0 
+3 255 48 48 48 
+1 0 0 
+1 0 
+12 PlayComputer 2 3 
+3 
+1 17 singlemachine.gaf 14 SingleMachine0 0 18 <-A
+1 17 singlemachine.gaf 14 SingleMachine0 1 18 <-A
+1 17 singlemachine.gaf 14 SingleMachine0 2 18 <-A
+3 
+2 0 0 2 0 4 Exit 2 0 4 Exit 3		      <-B
+1 7 Default 
+1 12 skirmish.wav 
+1 7 Default 
+2 0 16 Play the Machine 
+0 
+
+The button widget is, obviously, a button. There's 3 states
+but you only really see 2 : UP and down. The third seems to
+represent disabled buttons, I'm not sure.
+
+A->There's 3 possible states and so 3 gaf frames to display
+   them, here's the order from top to bottom :
+
+   1-Disabled
+   2-Pressed
+   3-Up
+
+
+B->Those are the 3 possible strings appearing over the
+   button, here again there's 3 states, from left to
+   right they're :
+
+   1-Disabled
+   2-Pressed
+   3-Up  
+
+   Notice that the disable state is often set to null.
+
+
+-----------------------------------
+Image and Label (widget #19) : 
+-----------------------------------
+
+19 1 
+1 
+2 0 432 61 41 1 0 0 0 
+3 255 255 255 255 
+1 0 0 
+1 0 
+9 BottomEnd 1 2 
+2 
+1 12 aramonig.gaf 6 EndCap 0 9 <-A
+1 12 aramonig.gaf 6 EndCap 1 9 <-A
+2 
+2 0 0 2 0 0 2		       <-B
+1 0 
+1 0 
+2 0 0 
+0 
+
+19 1 
+1 
+2 30 30 296 31 1 0 0 0 
+3 254 76 0 255 
+1 0 0 
+1 14 hattfont11.GAF 
+8 HelpText 1 2 
+2 
+1 0 0 0 0 		      <-A
+1 0 0 0 0 		      <-A
+2 
+2 0 6 Paused 2 0 6 Paused 2   <-B
+1 0 
+1 0 
+2 0 0 
+0 
+
+Cavedog combined the widget and image control together in TA:K. The state
+of the control isnt binary either, it can display text AND images.
+
+A->This is the image displayed by the control, again we have the disabled
+   image first that server no purpose whatsoever. From top to bottom :
+   
+   1-Disabled
+   2-Enabled
+
+B->The strings displayed by the widget, you can use the usual formating tools, 
+   center, left, right etc. From left to right :
+
+   1-Disabled
+   2-Enabled
+
+
+Note : Having a too small Width and Height will make the text invisible
+
+-----------------------------------
+Frame (widget #19) :
+-----------------------------------
+
+9 1
+1
+2 0 0 200 300 1 0 0 0
+3 255 255 255 255
+1 0 0
+1 0
+1 0 1 2
+2
+1 0 0 0 0
+1 0 0 0 0
+2
+2 0 0 2 0 0 2
+1 0
+1 0
+2 0 0
+4			<-A
+
+The frame, is an invisible widget that contains other widget. 
+Doesnt seem to have any effect in game wether the widgets are
+in a separate frame or not. I assume it's mostly useful when you're
+placing the widgets in an editor.
+
+A->This is the only really important part of this control, beside
+   it's xy coordinate and size. Its the number of widgets it will contain.
+
+   The widgets will be the one directly under himself, there's no magic
+   to make it the one you want somewhere in the file :P.
+
+
+-----------------------------------
+Multiple state button (widget #18) :
+-----------------------------------
+18 1 2 -1 
+1 
+2 286 79 95 20 1 0 0 0 
+3 255 255 255 255 
+1 0 0 
+1 25 times new roman (100).gaf 
+11 PlayerColor 2 12 
+12 					  <-A
+1 14 MainScreen.gaf 2 AI 2 9 		  <-B
+1 12 aramonig.gaf 6 EndCap 0 9 		  <-B
+1 14 MainScreen.gaf 14 StandardButton 0 9 <-B
+1 14 MainScreen.gaf 14 StandardButton 2 9 <-B
+1 14 MainScreen.gaf 14 StandardButton 1 9 <-B
+1 14 MainScreen.gaf 14 StandardButton 0 9 <-B
+1 14 MainScreen.gaf 14 StandardButton 2 9 <-B
+1 14 MainScreen.gaf 14 StandardButton 1 9 <-B
+1 14 MainScreen.gaf 14 StandardButton 0 9 <-B
+1 14 MainScreen.gaf 14 StandardButton 2 9 <-B
+1 14 MainScreen.gaf 14 StandardButton 1 9 <-B
+1 14 MainScreen.gaf 14 StandardButton 0 9 <-B
+12 					  <-A 
+2 0 4 VOID 2 0 7 PRESSED 2 0 6 STATE1 2 0 6 STATE2 2 0 6 STATE3 2 0 6 STATE4 2 0 6 STATE5 2 0 6 STATE6 2 0 6 STATE7 2 0 6 STATE8 2 0 6 STATE9 2 0 7 STATE10 12 <-C
+1 7 Default 
+1 12 skirmish.wav 
+1 7 Default 
+1 0 
+1 0 
+1 0 
+1 0 
+1 0 
+1 0 
+1 0 
+1 0 
+1 0 
+2 0 21 Click to select color 
+0 
+
+The multi state button is used for things like selecting your AI
+opponent name or other thing that require a similar type of display.
+
+A->The number of state for the button
+
+B->These are the frames for the multi state button, there's as
+   many frame as specified by A, see above A->. Here's what
+   each frame do from top to bottom as usual :
+
+   1-Disabled
+   2-Pressed : When the button is pressed, it will ALWAYS use this frame.
+   3-Frame for the first state
+   4-Frame for the second state
+   5... etc etc till 12 in this case
+
+C->The strings for each state, same number of strings as A again.
+   The strings uses from left to right :
+
+   1-Disabled
+   2-Pressed : When the button is pressed, it will ALWAYS use this string
+   3-String for the first state
+   4-String for the second state
+   5... etc etc till 12 in this case
+
+
+-----------------------------------
+Listbox (widget #15) :
+-----------------------------------
+15 2 3 255 0 0 255 
+
+0 0 0 0 
+1 
+2 210 275 373 112 1 1 1 0 
+3 0 0 0 0 
+1 0 0 
+1 0 
+7 MapList 1 2 
+2 
+1 0 0 0 0 
+1 0 0 0 0 
+2 
+2 0 0 2 0 0 2 
+1 0 
+1 0 
+2 0 0 
+2 
+
+This is the listbox control, it's used to contain various entries
+of text. Sadly, I cannot verify it's syntax exactly since the examples
+I found were empty templates like the above that are filled at run time 
+like so many other controls. When I try to run it as is in a place where the
+listbox name is not a keyword and of the listbox type, it crashes.
+
+
+From what I we saw so far from various other controls, it's easy to guess that 
+replace the string sections with strings instead of nulls would fill the listbox in
+the order they are placed from left to right and that there's associated images with
+the listbox.
+
+-----------------------------------
+Checkbox (widget #5) :
+-----------------------------------
+
+5 1 6 
+1 
+2 558 65 13 13 1 0 0 0 
+3 255 255 255 255 
+1 0 0 
+1 0 
+11 LineOfSight 3 5 
+5 
+1 14 scrollbars.gaf 8 CheckBox 0 9 	<-A
+1 14 scrollbars.gaf 8 CheckBox 1 9 	<-A
+1 14 scrollbars.gaf 8 CheckBox 2 9 	<-A
+1 14 scrollbars.gaf 8 CheckBox 3 9 	<-A
+1 14 scrollbars.gaf 8 CheckBox 4 9 	<-A
+5 
+2 0 0 2 0 0 2 0 0 2 0 0 2 0 0 5 	<-A
+1 0 
+1 0 
+1 0 
+1 0 
+1 0 
+2 0 0 
+0
+
+Checkboxes for those that never did any gui coding are on/off
+switches that arent mutualy exclusive. Meaning that many of a group
+can be switched on.
+
+
+A->As usual, the first one is from left to right and top to bottom
+   is the disabled frame/string. The order for the strings is as follow :
+
+   2 0 0 2 0 0 2 0 0 2 0 0 2 0 0 5 
+       ^     ^     ^     ^     ^
+       1     2     3     4     5
+
+   1-String down when the checkbox is disabled
+   2-String down when the checkbox is unchecked
+   3-String down when the checkbox is checked
+   4-String up when the checkbox is unchecked
+   5-String up when the checkbox is checked
+
+   1 14 scrollbars.gaf 8 CheckBox 0 9 	<-1
+   1 14 scrollbars.gaf 8 CheckBox 1 9 	<-2
+   1 14 scrollbars.gaf 8 CheckBox 2 9 	<-3
+   1 14 scrollbars.gaf 8 CheckBox 3 9 	<-4
+   1 14 scrollbars.gaf 8 CheckBox 4 9 	<-5
+
+
+   1-Frame down when the checkbox is disabled
+   2-Frame down when the checkbox is unchecked
+   3-Frame down when the checkbox is checked
+   4-Frame up when the checkbox is unchecked
+   5-Frame up when the checkbox is checked
+
+
+-----------------------------------
+Radio Button (widget #17) :
+-----------------------------------
+17 1 
+1 
+2 529 308 29 29 1 1 0 0 
+3 255 255 255 255 
+1 0 0 
+1 0 
+9 Uncloaked 2 3 
+3 
+1 19 IGCommonButtons.gaf 16 CloakedOffButton 0 9 <-A
+1 19 IGCommonButtons.gaf 16 CloakedOffButton 1 9 <-A 
+1 19 IGCommonButtons.gaf 16 CloakedOffButton 2 9 <-A 
+3 
+2 0 0 2 0 2 ON 2 0 3 OFF 3 			 <-B
+1 0 
+1 0 
+1 0 
+2 0 7 UnCloak 
+0 
+
+The radio button is an on/off button like the Checkbox but unlike
+it, it's mutualy exclusive, meaning that only one radio button in
+a group can be switched on.
+
+A->This is the image displayed by the control, again we have the disabled
+   image first that server no purpose whatsoever. From top to bottom :
+   
+   1-Disabled
+   2-Selected
+   3-Unselected
+
+B->The strings displayed by the widget, you can use the usual formating tools, 
+   center, left, right etc. From left to right :
+
+   1-Disabled
+   2-Selected
+   3-Unselected
+
+
+
+-----------------------------------
+Scrollbar (widget #12-14) :
+-----------------------------------
+12 1 100 0 1 0 0 
+1 
+2 558 275 25 112 1 0 0 0 
+3 255 255 255 255 
+1 0 0 
+1 0 
+6 slider 0 3 
+3 
+1 14 ScrollBars.gaf 9 BattleBar 0 9 
+1 14 ScrollBars.gaf 9 BattleBar 1 9 
+1 14 ScrollBars.gaf 9 BattleBar 2 9 
+3 
+2 0 0 2 0 0 2 0 0 3 
+1 0 
+1 0 
+1 0 
+2 0 0 
+3 
+
+14 1 
+1 
+1 
+1 
+2 558 275 25 21 1 0 0 0 
+3 255 255 255 255 
+1 0 0 
+1 0 
+9 incbutton 0 3 
+3 
+1 14 ScrollBars.gaf 9 ScrollInc 0 9 
+1 14 ScrollBars.gaf 9 ScrollInc 1 9 
+1 14 ScrollBars.gaf 9 ScrollInc 2 9 
+3 
+2 0 0 2 0 0 2 0 0 3 
+1 0 
+1 0 
+1 0 
+2 0 0 
+0 
+
+14 1 
+1 
+1 
+1 
+2 558 364 25 23 1 0 0 0 
+3 255 255 255 255 
+1 0 0 
+1 0 
+9 decbutton 0 3 
+3 
+1 14 ScrollBars.gaf 9 ScrollDec 0 9 
+1 14 ScrollBars.gaf 9 ScrollDec 1 9 
+1 14 ScrollBars.gaf 9 ScrollDec 2 9 
+3 
+2 0 0 2 0 0 2 0 0 3 
+1 0 
+1 0 
+1 0 
+2 0 0 
+0 
+
+14 1 
+1 
+1 
+1 
+2 559 342 22 22 1 0 0 0 
+3 255 255 255 255 
+1 0 0 
+1 0 
+7 sbutton 0 3 
+3 
+1 14 ScrollBars.gaf 11 ScrollThumb 0 9 
+1 14 ScrollBars.gaf 11 ScrollThumb 1 9 
+1 14 ScrollBars.gaf 11 ScrollThumb 2 9 
+3 
+2 0 0 2 0 0 2 0 0 3 
+1 0 
+1 0 
+1 0 
+2 0 0 
+0 
+
+Just like the listbox, I wasnt able to test out the scrollbar individualy,
+it has to be in a menu that needs it. Still, there's still some deductions to
+be made from previous widgets.
+
+The first widget (12) is the container that indicate that the next 3 widgets
+will be a scrollbar. A bit like the header and the frame widget.
+
+The next 3 widgets are in order the increment button, the decrement button and the knob.
+They all have the same widget number so obviously it's their order that decide who is what.
+
+
+
+
+===================================
+
+            EPILOGUE
+
+===================================
+
+Well *sniff* it's the end already, there might be some controls I didnt spot, since
+I cant do a full scan of the files with "ID:# of the widget" like the TA Gui. I just
+manualy parsed throught them and since I'm all too faillible...
+
+So, if you find any unknown control, please do email me and I'll update this document, my
+email is :RochDenis@hotmail.com . Of course this is valid for questions you might have too ^_^.
+
+
+
+
+
+===================================
+
+            THE END..
+
+             \_|_|_/
+            \/     \/_
+           _|       |_
+-----------------------------------
+               ||
+              //          /\|
+              \\         /__\
+               ||        |__|
+               //
+              //
+
+Am I not good at ASCII art eh? ^_^
+===================================
+
